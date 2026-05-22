@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BEAM Embedded Elixir Ecosystem Map</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --card: #161a22;
+      --text: #e6e6e6;
+      --muted: #a7b0c0;
+      --accent: #7c5cff;
+      --border: #2a3140;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header {
+      padding: 60px 20px 30px;
+      text-align: center;
+    }
+    header .logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    header .logo-wrap img {
+      max-width: 180px;
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+    header p {
+      color: var(--muted);
+      max-width: 800px;
+      margin: 10px auto 0;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      transition: 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+    .links a {
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+      margin: 4px 0;
+      font-size: 0.9rem;
+    }
+    .links a:hover {
+      color: var(--accent);
+    }
+    .tag {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .search {
+      max-width: 500px;
+      margin: 0 auto 30px;
+      display: flex;
+      justify-content: center;
+    }
+    .search input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-wrap">
+      <img src="./elixirware-logo.jpg" alt="Elixirware logo">
+    </div>
+    <h1>Embedded Elixir BEAM Ecosystem Map</h1>
+    <p>A curated overview of organizations and projects building distributed, embedded, and IoT systems around Erlang, Elixir, and the BEAM ecosystem.</p>
+  </header>
+
+  <div class="container">
+    <div class="search">
+      <input id="search" type="text" placeholder="Search projects...">
+    </div>
+
+    <div class="grid" id="grid">
+      <div class="card">
+        <h2>Nerves Project</h2>
+        <div class="tag">Embedded Linux Elixir firmware platform</div>
+        <div class="links">
+          <a href="https://nerves-project.org" target="_blank">nerves-project.org</a>
+          <a href="https://github.com/nerves-project" target="_blank">github.com/nerves-project</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>NervesHub</h2>
+        <div class="tag">OTA updates device management for Nerves</div>
+        <div class="links">
+          <a href="https://nerves-hub.org" target="_blank">nerves-hub.org</a>
+          <a href="https://github.com/nerves-hub" target="_blank">github.com/nerves-hub</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>GRiSP</h2>
+        <div class="tag">Bare-metal BEAM hardware platform</div>
+        <div class="links">
+          <a href="https://grisp.org" target="_blank">grisp.org</a>
+          <a href="https://grisp.io" target="_blank">grisp.io</a>
+          <a href="https://github.com/grisp" target="_blank">github.com/grisp</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>AtomVM</h2>
+        <div class="tag">Lightweight Erlang VM for microcontrollers</div>
+        <div class="links">
+          <a href="https://github.com/atomvm" target="_blank">github.com/atomvm</a>
+          <a href="https://atomvm.org" target="_blank">atomvm.org</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Astarte Platform</h2>
+        <div class="tag">IoT data management platform</div>
+        <div class="links">
+          <a href="https://astarte-platform.org" target="_blank">astarte-platform.org</a>
+          <a href="https://github.com/astarte-platform" target="_blank">github.com/astarte-platform</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>SparkMeter</h2>
+        <div class="tag">Energy grid monitoring systems</div>
+        <div class="links">
+          <a href="https://sparkmeter.io" target="_blank">sparkmeter.io</a>
+          <a href="https://github.com/sparkmeter" target="_blank">github.com/sparkmeter</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>FarmBot</h2>
+        <div class="tag">Open-source CNC farming robot</div>
+        <div class="links">
+          <a href="https://farm.bot" target="_blank">farm.bot</a>
+          <a href="https://github.com/FarmBot" target="_blank">github.com/FarmBot</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Peer Stritzinger GmbH</h2>
+        <div class="tag">GRiSP ecosystem embedded Erlang systems</div>
+        <div class="links">
+          <a href="https://stritzinger.com" target="_blank">stritzinger.com</a>
+          <a href="https://github.com/stritzinger" target="_blank">github.com/stritzinger</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+  </footer>
+
+  <script>
+    const search = document.getElementById('search');
+    const cards = document.querySelectorAll('.card');
+    search.addEventListener('input', e => {
+      const q = e.target.value.toLowerCase();
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(q) ? 'block' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
