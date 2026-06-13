@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The ElixirWare Manifesto — Explained</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ──────────────────────────────────────────────────── */
+:root {
+  --black: #07070D;
+  --card: #0F0E1A;
+  --purple: #5B1FA8;
+  --violet: #9B5CF6;
+  --lavender: #C4A8F0;
+  --trace: #7B3FD4;
+  --white: #F0EBF8;
+  --muted: rgba(240,235,248,0.55);
+  --border: rgba(155,92,246,0.18);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* ── CIRCUIT BACKGROUND ──────────────────────────────────────── */
+.circuit-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.06;
+}
+
+/* ── NAV ─────────────────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4rem;
+  height: 72px;
+  background: rgba(7,7,13,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.nav-logo svg { width: 30px; height: auto; }
+.nav-logo span {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  color: var(--white);
+}
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav-links a {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--lavender); }
+.nav-cta {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--violet) !important;
+  border: 1px solid var(--border);
+  padding: 0.45rem 1.1rem;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s !important;
+}
+.nav-cta:hover {
+  background: var(--purple);
+  color: var(--white) !important;
+  border-color: var(--purple);
+}
+
+/* ── HERO ────────────────────────────────────────────────────── */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8rem 2rem 6rem;
+  z-index: 1;
+}
+.hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(ellipse, rgba(91,31,168,0.35) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+.hero-logo-wrap { position: relative; display: inline-block; }
+.hero-logo-wrap svg {
+  width: 110px;
+  height: auto;
+  animation: logoFloat 6s ease-in-out infinite;
+  filter: drop-shadow(0 0 28px rgba(155,92,246,0.55));
+}
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); filter: drop-shadow(0 0 28px rgba(155,92,246,0.55)); }
+  50% { transform: translateY(-8px); filter: drop-shadow(0 0 44px rgba(155,92,246,0.75)); }
+}
+.hero-eyebrow {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--violet);
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.3s forwards;
+}
+.hero-heading {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.6rem, 6vw, 4.6rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: var(--white);
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.5s forwards;
+}
+.hero-heading em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--lavender) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 580px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.7s forwards;
+}
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.9s forwards;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── BUTTONS ─────────────────────────────────────────────────── */
+.btn-primary {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.85rem 2rem;
+  background: var(--purple);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+  display: inline-block;
+}
+.btn-primary:hover { background: var(--violet); transform: translateY(-1px); }
+.btn-ghost {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.85rem 2rem;
+  background: transparent;
+  color: var(--lavender);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s;
+  display: inline-block;
+}
+.btn-ghost:hover { border-color: var(--violet); color: var(--violet); transform: translateY(-1px); }
+
+/* ── STATS BAR ───────────────────────────────────────────────── */
+.stats-bar {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(15,14,26,0.7);
+  padding: 2.5rem 4rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--violet);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-top: 0.35rem;
+}
+
+/* ── SECTIONS ────────────────────────────────────────────────── */
+section {
+  position: relative;
+  z-index: 1;
+  padding: 7rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-full { max-width: 100%; padding-left: 0; padding-right: 0; }
+.section-inner { max-width: 1200px; margin: 0 auto; padding: 0 4rem; }
+.section-eyebrow {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: 1rem;
+}
+.section-heading {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+}
+.section-sub {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 620px;
+  margin-bottom: 3rem;
+}
+.section-sub strong { color: var(--lavender); font-weight: 500; }
+
+/* ── PRINCIPLES GRID ─────────────────────────────────────────── */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.service-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.2s;
+}
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--purple), var(--violet));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+.service-card:hover { border-color: var(--trace); transform: translateY(-3px); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba(91,31,168,0.25);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  font-size: 1.3rem;
+}
+.service-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.65rem;
+  letter-spacing: -0.01em;
+}
+.service-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+/* ── THESIS / ABOUT ──────────────────────────────────────────── */
+#thesis-bg {
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+.about-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.about-visual svg.tree-logo {
+  width: 220px;
+  filter: drop-shadow(0 0 48px rgba(91,31,168,0.5));
+  animation: logoFloat 7s ease-in-out 2s infinite;
+}
+.about-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  animation: ringPulse 3s ease-in-out infinite;
+}
+.about-ring:nth-child(2) { width: 260px; height: 260px; animation-delay: 0s; }
+.about-ring:nth-child(3) { width: 340px; height: 340px; animation-delay: 0.8s; }
+.about-ring:nth-child(4) { width: 420px; height: 420px; animation-delay: 1.6s; }
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.08; }
+}
+.about-pillars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.pillar {
+  padding: 1rem 1.2rem;
+  background: rgba(91,31,168,0.1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.pillar-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--lavender);
+  margin-bottom: 0.25rem;
+}
+.pillar-desc { font-size: 0.8rem; color: var(--muted); }
+
+/* ── TIERS (PROCESS STEPS) ───────────────────────────────────── */
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+}
+.process-steps::before {
+  content: '';
+  position: absolute;
+  top: 28px;
+  left: calc(12.5% + 16px);
+  right: calc(12.5% + 16px);
+  height: 1px;
+  background: linear-gradient(90deg, var(--purple), var(--violet), var(--purple));
+  z-index: 0;
+}
+.process-step {
+  text-align: center;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+.step-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--purple);
+  border: 2px solid var(--violet);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
+  box-shadow: 0 0 20px rgba(91,31,168,0.5);
+}
+.step-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+.step-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.55; }
+.step-rx {
+  display: inline-block;
+  margin-top: 0.7rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 0.28rem 0.8rem;
+  background: rgba(91,31,168,0.18);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--lavender);
+}
+
+/* ── TECH STACK ──────────────────────────────────────────────── */
+.tech-stack { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+.tech-pill {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.4rem 1rem;
+  background: rgba(91,31,168,0.15);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--lavender);
+  letter-spacing: 0.03em;
+  transition: background 0.2s, border-color 0.2s;
+}
+.tech-pill:hover { background: rgba(91,31,168,0.35); border-color: var(--violet); }
+
+/* ── HONESTY / FALSIFIABILITY ────────────────────────────────── */
+.honesty-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.honesty-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--trace);
+  border-radius: 8px;
+  padding: 1.8rem 2rem;
+}
+.honesty-card h4 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--lavender);
+  margin-bottom: 0.5rem;
+}
+.honesty-card p { font-size: 0.9rem; color: var(--muted); }
+
+/* ── QUOTE / CTA ─────────────────────────────────────────────── */
+#cta-bg { background: linear-gradient(180deg, var(--black) 0%, rgba(91,31,168,0.1) 100%); }
+.cta-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4rem;
+  text-align: center;
+}
+.cta-quote {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--white);
+  max-width: 740px;
+  margin: 0 auto 1.5rem;
+}
+.cta-quote em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--lavender) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cta-attrib { font-size: 0.85rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2rem; }
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--white);
+}
+.footer-brand svg { width: 22px; height: auto; }
+.footer-copy { font-size: 0.8rem; color: var(--muted); }
+.footer-links { display: flex; gap: 1.8rem; list-style: none; }
+.footer-links a {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--lavender); }
+
+/* ── REDUCED MOTION ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .hero-eyebrow, .hero-heading, .hero-sub, .hero-actions { opacity: 1; }
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  nav { padding: 0 2rem; }
+  section { padding: 5rem 2rem; }
+  .section-inner { padding: 0 2rem; }
+  .stats-bar { padding: 2rem; }
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .about-visual { display: none; }
+  .process-steps { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+  .process-steps::before { display: none; }
+  .honesty-grid { grid-template-columns: 1fr; }
+  .cta-card { padding: 2.5rem; }
+  footer { flex-wrap: wrap; gap: 1rem; }
+}
+@media (max-width: 640px) {
+  nav { padding: 0 1.25rem; }
+  .nav-links { display: none; }
+  section { padding: 4rem 1.25rem; }
+  .section-inner { padding: 0 1.25rem; }
+  .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 1.5rem; }
+  .services-grid { grid-template-columns: 1fr; }
+  .process-steps { grid-template-columns: 1fr; }
+  footer { padding: 2rem 1.25rem; flex-direction: column; align-items: flex-start; }
+  .footer-links { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── CIRCUIT BACKGROUND SVG ──────────────────────────────────── -->
+<div class="circuit-bg">
+  <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="circuit" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+        <path d="M10 60 H50 M50 60 V30 M50 30 H80 M80 30 V10" fill="none" stroke="#9B5CF6" stroke-width="0.8"/>
+        <path d="M60 110 V80 M60 80 H90 M90 80 V60 M90 60 H110" fill="none" stroke="#9B5CF6" stroke-width="0.8"/>
+        <circle cx="50" cy="60" r="2.5" fill="none" stroke="#9B5CF6" stroke-width="0.8"/>
+        <circle cx="50" cy="30" r="2.5" fill="none" stroke="#9B5CF6" stroke-width="0.8"/>
+        <circle cx="80" cy="30" r="2.5" fill="none" stroke="#9B5CF6" stroke-width="0.8"/>
+        <circle cx="90" cy="80" r="2.5" fill="none" stroke="#9B5CF6" stroke-width="0.8"/>
+        <circle cx="90" cy="60" r="2.5" fill="none" stroke="#9B5CF6" stroke-width="0.8"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#circuit)"/>
+  </svg>
+</div>
+
+<!-- ── NAV ──────────────────────────────────────────────────────── -->
+<nav>
+  <a href="#hero" class="nav-logo">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M32 4 C20 20, 12 30, 12 42 a20 20 0 0 0 40 0 C52 30, 44 20, 32 4 Z" fill="none" stroke="#9B5CF6" stroke-width="3"/>
+      <circle cx="32" cy="30" r="3" fill="#C4A8F0"/>
+      <path d="M32 33 V44 M32 38 L24 46 M32 38 L40 46" stroke="#C4A8F0" stroke-width="2" fill="none"/>
+      <circle cx="24" cy="48" r="2.4" fill="#9B5CF6"/>
+      <circle cx="32" cy="48" r="2.4" fill="#9B5CF6"/>
+      <circle cx="40" cy="48" r="2.4" fill="#9B5CF6"/>
+    </svg>
+    <span>ElixirWare</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#thesis-bg">Thesis</a></li>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="#tiers">Device Tiers</a></li>
+    <li><a href="#stack">The Stack</a></li>
+    <li><a href="#honesty">Boundaries</a></li>
+    <li><a href="#cta-bg" class="nav-cta">Read the Manifesto</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section id="hero" class="section-full">
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-logo-wrap">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M32 4 C20 20, 12 30, 12 42 a20 20 0 0 0 40 0 C52 30, 44 20, 32 4 Z" fill="none" stroke="#9B5CF6" stroke-width="3"/>
+        <circle cx="32" cy="30" r="3" fill="#C4A8F0"/>
+        <path d="M32 33 V44 M32 38 L24 46 M32 38 L40 46" stroke="#C4A8F0" stroke-width="2" fill="none"/>
+        <circle cx="24" cy="48" r="2.4" fill="#9B5CF6"/>
+        <circle cx="32" cy="48" r="2.4" fill="#9B5CF6"/>
+        <circle cx="40" cy="48" r="2.4" fill="#9B5CF6"/>
+      </svg>
+    </div>
+    <div class="hero-eyebrow">The ElixirWare Manifesto · Vol. 1, No. 1 · June 2026</div>
+    <h1 class="hero-heading">Build devices that are <em>designed to fail</em> — and to recover.</h1>
+    <p class="hero-sub">A manifesto for BEAM-based computing on the Internet of Things and the intelligent edge. Why a 40-year-old telecom runtime is the most modern answer to the fleet you can't drive out to fix.</p>
+    <div class="hero-actions">
+      <a href="#thesis-bg" class="btn-primary">Read the Argument</a>
+      <a href="#tiers" class="btn-ghost">Find Your Tier</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS BAR ────────────────────────────────────────────────── -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">4</div>
+    <div class="stat-label">Decades of BEAM fault tolerance</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">0–3</div>
+    <div class="stat-label">Device tiers, each with a prescription</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">1</div>
+    <div class="stat-label">Supervision tree = recovery plan + boot order + architecture</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">↓0</div>
+    <div class="stat-label">Truck rolls — the failure unit we minimize</div>
+  </div>
+</div>
+
+<!-- ── THESIS ───────────────────────────────────────────────────── -->
+<section id="thesis-bg" class="section-full">
+  <div class="section-inner" style="padding-top:7rem; padding-bottom:7rem;">
+    <div class="about-layout">
+      <div>
+        <div class="section-eyebrow">The Central Thesis</div>
+        <h2 class="section-heading">The devices are already in the walls.</h2>
+        <p class="section-sub">They're in the fields, the substations, and the factories. The only open question is whether the software inside them will be built to <strong>deny failure</strong> or to <strong>survive it</strong>. The manifesto's claim: the BEAM community spent four decades learning to survive it — and that operational discipline, not raw language preference, is what IoT is missing.</p>
+        <div class="about-pillars">
+          <div class="pillar">
+            <div class="pillar-title">Let It Crash</div>
+            <div class="pillar-desc">Don't write defensive code for every failure. Isolate, crash, restart from a known-good state.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-title">Process Isolation</div>
+            <div class="pillar-desc">Millions of lightweight processes with no shared memory — one sensor's bug can't corrupt another's state.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-title">Operations as Architecture</div>
+            <div class="pillar-desc">Fleet success is measured in MTTR, update success rate, and ops headcount per device-year.</div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-title">Partition Honesty</div>
+            <div class="pillar-desc">Edge sites must stay autonomous through WAN loss. The network failing is the normal case, not the exception.</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <svg class="tree-logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="32" cy="12" r="4" fill="none" stroke="#C4A8F0" stroke-width="2"/>
+          <path d="M32 16 V26 M32 26 L16 36 M32 26 L48 36 M32 26 V36" stroke="#9B5CF6" stroke-width="2" fill="none"/>
+          <circle cx="16" cy="40" r="4" fill="none" stroke="#9B5CF6" stroke-width="2"/>
+          <circle cx="32" cy="40" r="4" fill="none" stroke="#9B5CF6" stroke-width="2"/>
+          <circle cx="48" cy="40" r="4" fill="none" stroke="#9B5CF6" stroke-width="2"/>
+          <path d="M16 44 V52 M48 44 V52 M48 48 L42 54 M48 48 L54 54" stroke="#7B3FD4" stroke-width="1.6" fill="none"/>
+          <circle cx="16" cy="55" r="3" fill="#5B1FA8"/>
+          <circle cx="42" cy="56" r="2.4" fill="#5B1FA8"/>
+          <circle cx="54" cy="56" r="2.4" fill="#5B1FA8"/>
+        </svg>
+        <div class="about-ring"></div>
+        <div class="about-ring"></div>
+        <div class="about-ring"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRINCIPLES ───────────────────────────────────────────────── -->
+<section id="principles">
+  <div class="section-eyebrow">What the Manifesto Argues</div>
+  <h2 class="section-heading">Six properties IoT needs.<br>The BEAM ships all six.</h2>
+  <p class="section-sub">The manifesto maps each chronic IoT failure mode to a runtime property the BEAM has carried in production since the telecom era.</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🌳</div>
+      <div class="service-title">Supervision Trees</div>
+      <div class="service-desc">The hierarchy of supervisors and workers is simultaneously your fault-recovery plan, your boot order, and your architecture diagram. One artifact, three jobs — no drift between docs and reality.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💥</div>
+      <div class="service-title">"Let It Crash" Philosophy</div>
+      <div class="service-desc">For a device you can't SSH into at 3 a.m., automatic restart from a known-good state beats heroic error handling. Crashes become routine, observable, and contained.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📡</div>
+      <div class="service-title">Fleet Updates That Stick</div>
+      <div class="service-desc">Hot code upgrades and NervesHub-style OTA delivery shrink the vulnerability window between disclosure and patch — one of the manifesto's four headline operational metrics.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⏱️</div>
+      <div class="service-title">Soft Real-Time Scheduling</div>
+      <div class="service-desc">Preemptive, per-process scheduling keeps latencies predictable under load — no single misbehaving handler can starve telemetry, control loops, or the local UI.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔭</div>
+      <div class="service-title">Observability by Default</div>
+      <div class="service-desc">Live introspection of any process on a running device, plus the Telemetry instrumentation standard, means diagnosing a field unit without a debugger cable — or a truck roll.</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">👥</div>
+      <div class="service-title">Digital Twins as Processes</div>
+      <div class="service-desc">One supervised process per physical asset: a continuously synchronized twin with mailbox, state, and lifecycle. Session-per-asset is already precedented at massive scale on the BEAM.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEVICE TIERS ─────────────────────────────────────────────── -->
+<section id="tiers" class="section-full" style="background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="section-inner" style="padding-top:7rem; padding-bottom:7rem;">
+    <div class="section-eyebrow">The Tier Model</div>
+    <h2 class="section-heading">One thesis, four hardware realities.</h2>
+    <p class="section-sub">The manifesto refuses one-size-fits-all. It classifies devices into resource tiers and prescribes a runtime per tier — including an honest "not the BEAM" where the VM doesn't fit.</p>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-circle">T0</div>
+        <div class="step-title">Harvest &amp; Coin-Cell</div>
+        <div class="step-desc">8–64 KB sleepy MCUs, below the VM floor. Write the peripheral in C or Rust; represent it as a proxy process on the gateway.</div>
+        <span class="step-rx">Export the architecture, not the runtime</span>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">T1</div>
+        <div class="step-title">Constrained MCU</div>
+        <div class="step-desc">ESP32/STM32-class with 0.5–4 MB. Run AtomVM with Elixir or Gleam, supervised from the gateway. Validate peripheral coverage early.</div>
+        <span class="step-rx">AtomVM</span>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">T2</div>
+        <div class="step-title">Gateway &amp; Controller</div>
+        <div class="step-desc">Raspberry Pi / i.MX class, 256 MB+. Nerves plus OTP, with a Phoenix LiveView local UI. This is the thesis's home ground.</div>
+        <span class="step-rx">Nerves + OTP</span>
+      </div>
+      <div class="process-step">
+        <div class="step-circle">T3</div>
+        <div class="step-title">Edge Cluster &amp; Cloud</div>
+        <div class="step-desc">Erlang distribution and Horde inside the trusted site enclave; brokered MQTT to the cloud twin plane — autonomous through WAN loss.</div>
+        <span class="step-rx">Distribution stays in the enclave</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── THE STACK ────────────────────────────────────────────────── -->
+<section id="stack">
+  <div class="section-eyebrow">The Prescribed Stack</div>
+  <h2 class="section-heading">Named tools, not vibes.</h2>
+  <p class="section-sub">Every layer of the architecture — device firmware, fleet transport, cloud twins — gets a concrete, production-tested project. The manifesto's decision matrices select among these by tier and duty profile.</p>
+  <div class="tech-stack">
+    <span class="tech-pill">Erlang/OTP</span>
+    <span class="tech-pill">Elixir</span>
+    <span class="tech-pill">Gleam</span>
+    <span class="tech-pill">Nerves</span>
+    <span class="tech-pill">NervesHub</span>
+    <span class="tech-pill">AtomVM</span>
+    <span class="tech-pill">GRiSP</span>
+    <span class="tech-pill">EMQX / VerneMQ</span>
+    <span class="tech-pill">MQTT + mTLS</span>
+    <span class="tech-pill">Broadway</span>
+    <span class="tech-pill">Horde</span>
+    <span class="tech-pill">Phoenix LiveView</span>
+    <span class="tech-pill">Telemetry</span>
+    <span class="tech-pill">Nx (edge inference)</span>
+  </div>
+</section>
+
+<!-- ── HONEST BOUNDARIES ────────────────────────────────────────── -->
+<section id="honesty" class="section-full" style="background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="section-inner" style="padding-top:7rem; padding-bottom:7rem;">
+    <div class="section-eyebrow">Where the Manifesto Says No</div>
+    <h2 class="section-heading">A movement that can't lose an argument can't win one.</h2>
+    <p class="section-sub">The manifesto names its own boundaries, includes a go/no-go checklist for new hardware, and states what evidence would falsify it. An honest "no" is the manifesto working as intended.</p>
+    <div class="honesty-grid">
+      <div class="honesty-card">
+        <h4>Hard real-time control</h4>
+        <p>The BEAM has no certified worst-case execution time. Motor control and protection logic run in C, Rust, or IEC 61131 on a dedicated core — with the BEAM supervising from outside the loop.</p>
+      </div>
+      <div class="honesty-card">
+        <h4>Below the VM floor</h4>
+        <p>Tier-0 energy-harvesting and coin-cell devices can't host a VM at all. The honest prescription is native code, with the BEAM architecture mirrored at the gateway.</p>
+      </div>
+      <div class="honesty-card">
+        <h4>Raw distribution over the WAN</h4>
+        <p>Erlang distribution is for trusted LANs. Fleet-to-cloud traffic at 10³–10⁸ devices goes through brokered MQTT with mutual TLS — partition-honest by design.</p>
+      </div>
+      <div class="honesty-card">
+        <h4>What would falsify it</h4>
+        <p>Fleet-scale longitudinal evidence that BEAM deployments fail to outperform conventional stacks on MTTR, update success, vulnerability-window duration, and ops headcount — at comparable cost. The movement commits to publishing such evidence if it finds it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ──────────────────────────────────────────────────────── -->
+<section id="cta-bg" class="section-full">
+  <div class="section-inner" style="padding-top:7rem; padding-bottom:7rem;">
+    <div class="cta-card">
+      <p class="cta-quote">"If this document has given you an argument you could not previously make to your own organization, the movement has already done its first work. <em>Let it crash — and let it recover.</em>"</p>
+      <div class="cta-attrib">The ElixirWare Manifesto · Closing Charge</div>
+      <div class="hero-actions" style="opacity:1; animation:none;">
+        <a href="#" class="btn-primary">Download the Full Manifesto</a>
+        <a href="#thesis-bg" class="btn-ghost">Revisit the Thesis</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ───────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-brand">
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M32 4 C20 20, 12 30, 12 42 a20 20 0 0 0 40 0 C52 30, 44 20, 32 4 Z" fill="none" stroke="#9B5CF6" stroke-width="3"/>
+      <circle cx="32" cy="30" r="3" fill="#C4A8F0"/>
+      <path d="M32 33 V44 M32 38 L24 46 M32 38 L40 46" stroke="#C4A8F0" stroke-width="2" fill="none"/>
+    </svg>
+    ElixirWare
+  </div>
+  <div class="footer-copy">© 2026 The ElixirWare Movement · West Vancouver, BC</div>
+  <ul class="footer-links">
+    <li><a href="#thesis-bg">Thesis</a></li>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="#tiers">Tiers</a></li>
+    <li><a href="#honesty">Boundaries</a></li>
+  </ul>
+</footer>
+
+</body>
+</html>
